@@ -68,7 +68,7 @@ int main() {
     // The tile size is the size of the images.
     const int tileSize = X_texture.getSize().x;
 
-    // The sizes of the dividing rectangles.
+    // The sizes of the dividing rectangles (assuming vertical).
     const int barWidth = tileSize/20;
     const int barHeight = boardSize*tileSize + (boardSize-1)*barWidth;
 
@@ -178,7 +178,7 @@ int main() {
             }
         }
 
-        // Draw the game tiles.
+        // Draw the game board.
         int x, y;
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
@@ -204,7 +204,8 @@ int main() {
         }
 
         // Draw win line when game is over, unless there is no winner.
-        if (isGameOver && winCode != 0) {
+        if (isGameOver && winCode > 0) {
+            // Rectangle for win line.
             const int winLineWidth = windowSize;
             const int winLineHeight = 10;
             sf::RectangleShape winLine(sf::Vector2f(winLineWidth, winLineHeight));
@@ -213,6 +214,8 @@ int main() {
             const int rotationAngle = winCode < 4 ? 0 : // Horizontal
                                       winCode < 7 ? 90 : // Vertical
                                       winCode == 7 ? 45 : -45; // Diagonal
+
+            // Scale line if diagonal to fit screen.
             if (winCode >= 7)
                 winLine.setScale(1.415, 1.0);
 
