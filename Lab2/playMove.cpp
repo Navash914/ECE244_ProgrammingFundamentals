@@ -39,8 +39,7 @@ void playMove(int gameBoard[3][3], int row, int col, bool& isXTurn, bool& isVali
 
     isValidMove = rowInBounds && colInBounds && gameBoard[row][col] == Empty;
 
-    if (isValidMove)
-    {
+    if (isValidMove) {
         // Move is valid.
 
         if (isXTurn)
@@ -63,6 +62,7 @@ void playMove(int gameBoard[3][3], int row, int col, bool& isXTurn, bool& isVali
 
 }
 
+// Checks if game is over and updates winCode.
 void checkGameOver(int gameBoard[3][3], bool& isGameOver, int& winCode) {
 
     /*
@@ -78,54 +78,53 @@ void checkGameOver(int gameBoard[3][3], bool& isGameOver, int& winCode) {
      *  8 - Right to Left Diagonal
      */
 
-    int emptyCount = 0;
-    int rowStart, colStart, diag1Start, diag2Start;
+    int emptyCount = 0; // How many empty tiles left.
+    int rowStart, colStart, diag1Start, diag2Start; // Starting tile values to match to.
+    // Number of matches along each diagonal. diag1 is left to right and diag2 is right to left
     int diag1Count = 0, diag2Count = 0;
     for (int i = 0; i < boardSize; i++) {
         rowStart = gameBoard[i][0], colStart = gameBoard[0][i],
-            diag1Start = gameBoard[0][0], diag2Start = gameBoard[0][boardSize-1];
+        diag1Start = gameBoard[0][0], diag2Start = gameBoard[0][boardSize-1];
 
-        int rowCount = 0, colCount = 0;
-
-        bool canRowWin = rowStart != Empty,
-             canColWin = colStart != Empty,
-             canDiag1Win = diag1Start != Empty,
-             canDiag2Win = diag2Start != Empty;
+        int rowCount = 0, colCount = 0; // Number of matches in row or col.
 
         for (int j = 0; j < boardSize; j++) {
             int tile = gameBoard[i][j];
 
             if (tile == Empty)
-                emptyCount++;
+                emptyCount++; // Found empty tile.
 
             if (tile == rowStart)
-                rowCount++;
+                rowCount++; // Found match with starting row.
             if (gameBoard[j][i] == colStart)
-                colCount++;
+                colCount++; // Found match with starting column.
 
             if (i == j && tile == diag1Start)
-                diag1Count++;
+                diag1Count++; // Found match with starting diag1.
             if (i == boardSize - j - 1 && tile == diag2Start)
-                diag2Count++;
+                diag2Count++; // Found match with starting diag2.
         }
 
-        if (canRowWin && rowCount == boardSize)
-            winCode = i + 1;
+        // Check for win.
+        // First tile must not be empty for win.
+        if (rowStart != Empty && rowCount == boardSize)
+            winCode = i + 1; // Row win.
 
-        if (canColWin && colCount == boardSize)
-            winCode = i + 4;
+        if (colStart != Empty && colCount == boardSize)
+            winCode = i + 4; // Column win.
 
-        if (canDiag1Win && diag1Count == boardSize)
-            winCode = 7;
+        if (diag1Start != Empty && diag1Count == boardSize)
+            winCode = 7; // Diag1 win.
 
-        if (canDiag2Win && diag2Count == boardSize)
-            winCode = 8;
+        if (diag2Start != Empty && diag2Count == boardSize)
+            winCode = 8; // Diag2 win.
 
     }
 
+    // Check game over.
     if (winCode > 0)
-        isGameOver = true;
+        isGameOver = true; // Game over if a player won.
     else
-        isGameOver = emptyCount == 0;
+        isGameOver = emptyCount == 0; // Game over if no empty tiles left.
 
 }
