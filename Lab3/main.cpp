@@ -275,7 +275,6 @@ void commandDraw(stringstream& stream) {
             cout << "Drew all shapes" << endl;
             for (int i = 0; i < shapeCount; i++) {
                 if (shapesArray[i] == nullptr) continue; // Skip deleted objects
-                cout << "Drew ";
                 shapesArray[i]->draw();
             }
         } else {
