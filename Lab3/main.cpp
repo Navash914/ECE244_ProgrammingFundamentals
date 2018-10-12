@@ -192,7 +192,7 @@ void commandMove(stringstream& stream) {
 
     // Check if shape name exists
     int shapeIndex = findShapeIndexByName(name);
-    if (shapeIndex < 0)
+    if (!name.empty() && shapeIndex < 0)
         setError(SHAPE_NOT_FOUND(name), SHAPE_NOT_FOUND_PRIORITY); // Shape does not exist
 
     // Continue taking arguments
@@ -224,7 +224,7 @@ void commandRotate(stringstream& stream) {
 
     // Check if shape name exists
     int shapeIndex = findShapeIndexByName(name);
-    if (shapeIndex < 0)
+    if (!name.empty() && shapeIndex < 0)
         setError(SHAPE_NOT_FOUND(name), SHAPE_NOT_FOUND_PRIORITY); // Shape does not exist.
 
     // Continue taking arguments
@@ -261,7 +261,7 @@ void commandDraw(stringstream& stream) {
 
     // Check if shape name exists
     int shapeIndex = findShapeIndexByName(name);
-    if (name != "all" && shapeIndex < 0)
+    if (!name.empty() && name != "all" && shapeIndex < 0)
         setError(SHAPE_NOT_FOUND(name), SHAPE_NOT_FOUND_PRIORITY); // Shape does not exist
 
     // Check for too many args.
@@ -299,7 +299,7 @@ void commandDelete(stringstream& stream) {
 
     // Check if shape name exists
     int shapeIndex = findShapeIndexByName(name);
-    if (name != "all" && shapeIndex < 0)
+    if (!name.empty() && name != "all" && shapeIndex < 0)
         setError(SHAPE_NOT_FOUND(name), SHAPE_NOT_FOUND_PRIORITY); // Shape does not exist
 
     // Check for too many args.
