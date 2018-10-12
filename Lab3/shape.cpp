@@ -86,6 +86,6 @@ void shape::setRotate(int angle) {
 void shape::draw() {
     cout << name << ": " << type << " "
          << x_location << " " << y_location << " "
-         << x_size << " " << y_size << " "
+         << x_size << " " << y_size
          << endl;
 }
