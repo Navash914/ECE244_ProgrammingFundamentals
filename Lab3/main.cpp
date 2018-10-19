@@ -130,6 +130,17 @@ int main() {
 
     }  // End input loop until EOF.
 
+    // Delete all allocated data before exit.
+    if (shapesArray != nullptr) {
+        for (int i=0; i<shapeCount; i++) {
+            if (shapesArray[i] != nullptr) {
+                delete shapesArray[i];
+                shapesArray[i] = nullptr;
+            }
+        }
+        delete [] shapesArray;
+    }
+
     return EXIT_SUCCESS;
 } // main
 
