@@ -7,7 +7,7 @@
 
 
 #include <iostream>
-#include <stdio.h>
+//#include <stdio.h> // Debug Only
 #include <sstream>
 #include <string>
 
@@ -167,9 +167,9 @@ void commandCreate(stringstream& stream) {
     getInput(stream, y_sz);
 
     // Check for too many args or full array.
-    if (inputExists(stream))
+    if (!errorExists() && inputExists(stream))
         setError(TOO_MANY_ARGS, TOO_MANY_ARGS_PRIORITY);
-    if (shapeCount >= maxShapes)
+    if (!errorExists() && shapeCount >= maxShapes)
         setError(ARRAY_FULL, ARRAY_FULL_PRIORITY);
 
     // If no errors at this points, safe to create object.
@@ -200,7 +200,7 @@ void commandMove(stringstream& stream) {
     getInput(stream, y_loc);
 
     // Check for too many args.
-    if (inputExists(stream))
+    if (!errorExists() && inputExists(stream))
         setError(TOO_MANY_ARGS, TOO_MANY_ARGS_PRIORITY);
 
     // If no errors at this point, safe to move object.
@@ -235,7 +235,7 @@ void commandRotate(stringstream& stream) {
         setError(INVALID_VALUE, INVALID_VALUE_PRIORITY);
 
     // Check for too many args.
-    if (inputExists(stream))
+    if (!errorExists() && inputExists(stream))
         setError(TOO_MANY_ARGS, TOO_MANY_ARGS_PRIORITY);
 
     // If no errors at this point, safe to rotate object.
@@ -265,7 +265,7 @@ void commandDraw(stringstream& stream) {
         setError(SHAPE_NOT_FOUND(name), SHAPE_NOT_FOUND_PRIORITY); // Shape does not exist
 
     // Check for too many args.
-    if (inputExists(stream))
+    if (!errorExists() && inputExists(stream))
         setError(TOO_MANY_ARGS, TOO_MANY_ARGS_PRIORITY);
 
     // If no errors at this point, safe to draw object.
@@ -302,7 +302,7 @@ void commandDelete(stringstream& stream) {
         setError(SHAPE_NOT_FOUND(name), SHAPE_NOT_FOUND_PRIORITY); // Shape does not exist
 
     // Check for too many args.
-    if (inputExists(stream))
+    if (!errorExists() && inputExists(stream))
         setError(TOO_MANY_ARGS, TOO_MANY_ARGS_PRIORITY);
 
     // If no errors at this point, safe to delete object.
@@ -322,6 +322,7 @@ void commandDelete(stringstream& stream) {
 // Gets string input and does error checking
 void getInput(stringstream& stream, string& dest, bool isType) {
 
+    if (errorExists()) return;
     // Check if arg exists
     if (!inputExists(stream)) {
         setError(TOO_FEW_ARGS, TOO_FEW_ARGS_PRIORITY);
@@ -357,7 +358,7 @@ void getInput(stringstream& stream, string& dest, bool isType) {
         for (int i = 0; i < max; i++) {
             if ((i < NUM_KEYWORDS && dest == keyWordsList[i])
                 || (i < NUM_TYPES && dest == shapeTypesList[i])
-                ) {
+                    ) {
                 // Shape name is a keyword or a type name
                 setError(INVALID_NAME, INVALID_NAME_PRIORITY);
                 return;
@@ -368,7 +369,7 @@ void getInput(stringstream& stream, string& dest, bool isType) {
 
 // Gets integer input and does error checking
 void getInput(stringstream& stream, int& dest) {
-
+    if (errorExists()) return;
     // Check if arg exists.
     if (!inputExists(stream)) {
         setError(TOO_FEW_ARGS, TOO_FEW_ARGS_PRIORITY);
