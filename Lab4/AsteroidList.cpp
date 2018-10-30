@@ -110,7 +110,7 @@ AsteroidListItem* AsteroidList::insertAfter(AsteroidListItem* prev, const Astero
 	AsteroidListItem* jointRight = prev->getNext();
 	for (AsteroidListItem* i = (AsteroidListItem*) others.begin(); i != others.end(); i = i->getNext()) {
 		AsteroidListItem* newItem = new AsteroidListItem(i->getData());
-		iterator->setNext(i);
+		iterator->setNext(newItem);
 		iterator = iterator->getNext();
 	}
 	iterator->setNext(jointRight);
