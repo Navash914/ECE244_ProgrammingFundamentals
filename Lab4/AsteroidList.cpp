@@ -15,7 +15,9 @@ AsteroidListItem::~AsteroidListItem() {
 	delete data;
 }
 
-AsteroidList::AsteroidList() {}
+// head.next is automatically assigned to nullptr
+// via the AsteroidListItem default constructor
+AsteroidList::AsteroidList() = default;
 
 AsteroidList::AsteroidList(const AsteroidList& src)
 {
@@ -107,13 +109,12 @@ AsteroidListItem* AsteroidList::insertAfter(AsteroidListItem* prev, Asteroid e) 
 
 AsteroidListItem* AsteroidList::insertAfter(AsteroidListItem* prev, const AsteroidList& others) {
 	AsteroidListItem* iterator = prev;
-	AsteroidListItem* jointRight = prev->getNext();
-	for (AsteroidListItem* i = (AsteroidListItem*) others.begin(); i != others.end(); i = i->getNext()) {
-		AsteroidListItem* newItem = new AsteroidListItem(i->getData());
-		iterator->setNext(newItem);
-		iterator = iterator->getNext();
-	}
-	iterator->setNext(jointRight);
+	AsteroidListItem* joinAtEnd = prev->getNext();
+	for (AsteroidListItem* i = (AsteroidListItem*) others.begin();
+			i != others.end(); i = i->getNext()
+	)
+		iterator = insertAfter(iterator, i->getData());
+	iterator->setNext(joinAtEnd);
 	return iterator;
 }
 
