@@ -12,7 +12,7 @@
 #include "GameAI.hpp"
 
 int getAngleToAsteroid (const Asteroid& asteroid, const ShipState& shipState, bool leftEnd);
-const Asteroid* getMostDangerousAsteroid (const AsteroidsObserver& asteroidsObserver, const ShipState& shipState)
+const Asteroid* getMostDangerousAsteroid (const AsteroidsObserver& asteroidsObserver, const ShipState& shipState);
 
 /**
  * Student editable struct for storing their ai state
@@ -20,8 +20,8 @@ const Asteroid* getMostDangerousAsteroid (const AsteroidsObserver& asteroidsObse
  * Maybe you want to remember the last asteroid Id you shot at?
  */
 struct MyAIData {
-	bool debug_on = true;
-	const Asteroid* asteroidToHit;
+    bool debug_on = true;
+    SuggestedAction::Yawing lastYaw = SuggestedAction::YawingStop;
 };
 
 #endif /* ECE244_GALAXY_EXPLORER_STUDENT_AI_DATA_HPP */
