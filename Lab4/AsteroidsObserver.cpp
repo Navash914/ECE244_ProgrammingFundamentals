@@ -12,7 +12,15 @@ void AsteroidsObserver::onAsteroidInRange(Asteroid asteroid) {
 }
 
 void AsteroidsObserver::onAsteroidUpdate(Asteroid asteroid) {
-
+    for (AsteroidListItem* it = asteroid_list.begin();
+        it != asteroid_list.end(); it = it->getNext()
+    ) {
+        if (!it->hasNext()) continue;
+        if (it->getNext()->getData().getID() != asteroid.getID()) continue;
+        AsteroidListItem* newItem = asteroid_list.insertAfter(it, asteroid);
+        asteroid_list.eraseAfter(newItem);
+        break;
+    }
 }
 
 void AsteroidsObserver::onAsteroidOutOfRange(Asteroid asteroid) {
