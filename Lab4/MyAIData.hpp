@@ -7,6 +7,12 @@
 #ifndef ECE244_GALAXY_EXPLORER_STUDENT_AI_DATA_HPP
 #define ECE244_GALAXY_EXPLORER_STUDENT_AI_DATA_HPP
 
+#include "Asteroid.hpp"
+#include "AsteroidsObserver.hpp"
+#include "GameAI.hpp"
+
+int getAngleToAsteroid (const Asteroid& asteroid, const ShipState& shipState, bool leftEnd);
+const Asteroid* getMostDangerousAsteroid (const AsteroidsObserver& asteroidsObserver, const ShipState& shipState)
 
 /**
  * Student editable struct for storing their ai state
@@ -15,6 +21,7 @@
  */
 struct MyAIData {
 	bool debug_on = true;
+	const Asteroid* asteroidToHit;
 };
 
 #endif /* ECE244_GALAXY_EXPLORER_STUDENT_AI_DATA_HPP */
