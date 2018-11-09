@@ -49,40 +49,53 @@ SuggestedAction GameAI::suggestAction(const ShipState& ship_state) {
 	 return SuggestedAction{ SuggestedAction::YawingClockwise, SuggestedAction::FiringTry };
 	 */
 
+        
     const Asteroid* asteroidToHit = getMostDangerousAsteroid(asteroid_observer, ship_state);
 	if (asteroidToHit == nullptr) {
-	    if (ship_state.millidegree_rotation > 45 * 1000)
+	    if (ship_state.millidegree_rotation > 45 * 1000) {
+                my_game_ai->lastYaw = SuggestedAction::YawingAntiClockwise;
 	        return SuggestedAction{ SuggestedAction::YawingAntiClockwise, SuggestedAction::FiringTry };
-        else if (ship_state.millidegree_rotation < -45 * 1000)
-            return SuggestedAction{ SuggestedAction::YawingClockwise, SuggestedAction::FiringTry };
-        else
-            return SuggestedAction{ SuggestedAction::YawingNoChange, SuggestedAction::FiringTry };
-	} else {
-        if (customState().debug_on) {
-            if (!asteroidsObserver().asteroids().isEmpty()) {
-                const sf::IntRect first_ast_hb = asteroidToHit->getCurrentHitbox();
-                sf::RectangleShape ast_rect(sf::Vector2f(first_ast_hb.width, first_ast_hb.height));
-                ast_rect.setPosition(first_ast_hb.left, first_ast_hb.top);
-                ast_rect.setOutlineThickness(33.0f); // if lines are too thin, they won't show up sometimes
-                ast_rect.setOutlineColor(sf::Color::Yellow);
-                ast_rect.setFillColor(sf::Color::Transparent);
-                debug_rt->draw(ast_rect);
+            } else if (ship_state.millidegree_rotation < -45 * 1000) {
+                my_game_ai->lastYaw = SuggestedAction::YawingClockwise;
+                return SuggestedAction{ SuggestedAction::YawingClockwise, SuggestedAction::FiringTry };
+            } else if (my_game_ai->lastYaw == SuggestedAction::YawingStop) {
+                my_game_ai->lastYaw = SuggestedAction::YawingClockwise;
+                return SuggestedAction{ SuggestedAction::YawingClockwise, SuggestedAction::FiringTry };
+            } else {
+                return SuggestedAction{ my_game_ai->lastYaw, SuggestedAction::FiringTry };
             }
-        }
-        int angleToFire_L = getAngleToAsteroid(*asteroidToHit, ship_state, true);
-        int angleToFire_R = getAngleToAsteroid(*asteroidToHit, ship_state, false);
-        int shipAngle = ship_state.millidegree_rotation;
-        if (shipAngle < angleToFire_L)
-            return SuggestedAction{ SuggestedAction::YawingClockwise, SuggestedAction::FiringTry };
-        if (shipAngle > angleToFire_R)
-            return SuggestedAction{ SuggestedAction::YawingAntiClockwise, SuggestedAction::FiringTry };
-        return SimpleActions::STOP_YAWING_AND_FIRE;
+	} else {
+            if (my_game_ai->debug_on) {
+                if (!asteroidsObserver().asteroids().isEmpty()) {
+                    const sf::IntRect first_ast_hb = asteroidToHit->getCurrentHitbox();
+                    sf::RectangleShape ast_rect(sf::Vector2f(first_ast_hb.width, first_ast_hb.height));
+                    ast_rect.setPosition(first_ast_hb.left, first_ast_hb.top);
+                    ast_rect.setOutlineThickness(33.0f); // if lines are too thin, they won't show up sometimes
+                    ast_rect.setOutlineColor(sf::Color::Yellow);
+                    ast_rect.setFillColor(sf::Color::Transparent);
+                    debug_rt->draw(ast_rect);
+
+                }
+            }
+            int angleToFire_L = getAngleToAsteroid(*asteroidToHit, ship_state, true);
+            int angleToFire_R = getAngleToAsteroid(*asteroidToHit, ship_state, false);
+            int shipAngle = ship_state.millidegree_rotation;
+            if (shipAngle < angleToFire_L) {
+                my_game_ai->lastYaw = SuggestedAction::YawingClockwise;
+                return SuggestedAction{ SuggestedAction::YawingClockwise, SuggestedAction::FiringTry };
+            } if (shipAngle > angleToFire_R) {
+                my_game_ai->lastYaw = SuggestedAction::YawingAntiClockwise;
+                return SuggestedAction{ SuggestedAction::YawingAntiClockwise, SuggestedAction::FiringTry };
+            } else {
+                my_game_ai->lastYaw = SuggestedAction::YawingStop;
+                return SimpleActions::STOP_YAWING_AND_FIRE;
+            }
 	}
 
 }
 
 int getAngleToAsteroid (const Asteroid& asteroid, const ShipState& shipState, bool leftEnd) {
-    sf::Vector2f forward(0.0, 1.0);
+    sf::Vector2f forward(0.0, -1.0);
     sf::Vector2f shipDot( shipState.hitbox.left + shipState.hitbox.width/2.0f,
                             shipState.hitbox.top + shipState.hitbox.height/2.0f );
     sf::Vector2f asteroidDot;
@@ -96,6 +109,8 @@ int getAngleToAsteroid (const Asteroid& asteroid, const ShipState& shipState, bo
     float magProduct = (float) std::sqrt(shipToAst.x * shipToAst.x + shipToAst.y * shipToAst.y);
     float angle = (std::acos(dotProduct / magProduct) * 180.0f * 7.0f) / 22.0f;
     angle *= 1000;
+    if (asteroidDot.x < shipDot.x)
+        angle *= -1;
 
     return (int) angle;
 }
