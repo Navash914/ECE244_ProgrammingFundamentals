@@ -12,7 +12,7 @@ void AsteroidsObserver::onAsteroidInRange(Asteroid asteroid) {
 }
 
 void AsteroidsObserver::onAsteroidUpdate(Asteroid asteroid) {
-    for (AsteroidListItem* it = asteroid_list.begin();
+    for (AsteroidListItem* it = asteroid_list.beforeBegin();
         it != asteroid_list.end(); it = it->getNext()
     ) {
         if (!it->hasNext()) continue;
