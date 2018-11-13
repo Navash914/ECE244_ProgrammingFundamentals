@@ -11,7 +11,13 @@
 #include "AsteroidsObserver.hpp"
 #include "GameAI.hpp"
 
+// Returns angle between two points in millidegrees,
+int getAngleToPoint (const sf::Vector2f& src, const sf::Vector2f point);
+
+// Gets angle to left or right end of asteroid hitbox from ship.
 int getAngleToAsteroid (const Asteroid& asteroid, const ShipState& shipState, bool leftEnd);
+
+// Gets asteroid that will hit the ship the fastest.
 const Asteroid* getMostDangerousAsteroid (const AsteroidsObserver& asteroidsObserver, const ShipState& shipState);
 
 /**
