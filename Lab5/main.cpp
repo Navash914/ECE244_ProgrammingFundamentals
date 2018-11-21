@@ -5,80 +5,128 @@
 
 using namespace std;
 
-bool statusToBool (const string& status) {
-    return status == "active";
-}
+const string ERROR_ENTRY_NOT_FOUND = "Error: entry does not exist";
+const string ERROR_ENTRY_EXISTS = "Error: entry already exists";
+const string SUCCESS = "Success";
+
+// BST database
+TreeDB* treeDB;
+
+// Command Functions:
+void commandInsert();
+void commandFind();
+void commandRemove();
+void commandPrintAll();
+void commandPrintProbes();
+void commandRemoveAll();
+void commandCountActive();
+void commandUpdateStatus();
+
+// Convert status string to bool
+bool statusToBool (const string& status);
 
 int main() {
-    TreeDB* treeDB = new TreeDB;
+    // Initialize Database
+    treeDB = new TreeDB;
 
     while (!cin.eof()) {
         cout << "> ";
         string command;
         cin >> command;
 
-        if (command == "insert") {
-            string name;
-            unsigned int ip;
-            string status;
-            cin >> name >> ip >> status;
-            DBentry* entry = new DBentry(name, ip, statusToBool(status));
-            bool success = treeDB->insert(entry);
-            if (success)
-                cout << "Success" << endl;
-            else {
-                cout << "Error: entry already exists" << endl;
-                delete entry;
-            }
-        } else if (command == "find") {
-            string name;
-            cin >> name;
-            DBentry* entry = treeDB->find(name);
-            if (entry == nullptr)
-                cout << "Error: entry does not exist" << endl;
-            else
-                cout << *entry << endl;
-        } else if (command == "remove") {
-            string name;
-            cin >> name;
-            bool success = treeDB->remove(name);
-            if (success)
-                cout << "Success" << endl;
-            else
-                cout << "Error: entry does not exist" << endl;
-        } else if (command == "printall") {
-            cout << *treeDB;
-        } else if (command == "printprobes") {
-            string name;
-            cin >> name;
-            DBentry* entry = treeDB->find(name);
-            if (entry == nullptr)
-                cout << "Error: entry does not exist" << endl;
-            else
-                treeDB->printProbes();
-        } else if (command == "removeall") {
-            treeDB->clear();
-            cout << "Success" << endl;
-        } else if (command == "countactive") {
-            treeDB->countActive();
-        } else if (command == "updatestatus") {
-            string name;
-            string status;
-            cin >> name >> status;
-            DBentry* entry = treeDB->find(name);
-            if (entry == nullptr)
-                cout << "Error: entry does not exist" << endl;
-            else {
-                entry->setActive(statusToBool(status));
-                cout << "Success" << endl;
-            }
-        } else {
-            // Should never reach this point.
-            cout << "Invalid command" << endl;
-        }
+        if (command == "insert")
+            commandInsert();
+        else if (command == "find")
+            commandFind();
+        else if (command == "remove")
+            commandRemove();
+        else if (command == "printall")
+            commandPrintAll();
+        else if (command == "printprobes")
+            commandPrintProbes();
+        else if (command == "removeall")
+            commandRemoveAll();
+        else if (command == "countactive")
+            commandCountActive();
+        else if (command == "updatestatus")
+            commandUpdateStatus();
     }
 
     delete treeDB;
-
     return EXIT_SUCCESS;
+}
+
+void commandInsert() {
+    string name;
+    unsigned int ip;
+    string status;
+    cin >> name >> ip >> status;
+    DBentry* entry = new DBentry(name, ip, statusToBool(status));
+    bool success = treeDB->insert(entry);
+    if (success)
+        cout << SUCCESS << endl;
+    else {
+        cout << ERROR_ENTRY_EXISTS << endl;
+        delete entry; // Delete entry as it was not inserted
+    }
+}
+
+void commandFind() {
+    string name;
+    cin >> name;
+    DBentry* entry = treeDB->find(name);
+    if (entry == nullptr)
+        cout << ERROR_ENTRY_NOT_FOUND << endl;
+    else
+        cout << *entry << endl;
+}
+
+void commandRemove() {
+    string name;
+    cin >> name;
+    bool success = treeDB->remove(name);
+    if (success)
+        cout << SUCCESS << endl;
+    else
+        cout << ERROR_ENTRY_NOT_FOUND << endl;
+}
+
+void commandPrintAll() {
+    cout << *treeDB;
+}
+
+void commandPrintProbes() {
+    string name;
+    cin >> name;
+    DBentry* entry = treeDB->find(name);
+    if (entry == nullptr)
+        cout << ERROR_ENTRY_NOT_FOUND << endl;
+    else
+        treeDB->printProbes();
+}
+
+void commandRemoveAll() {
+    treeDB->clear();
+    cout << SUCCESS << endl;
+}
+
+void commandCountActive() {
+    treeDB->countActive();
+}
+
+void commandUpdateStatus() {
+    string name;
+    string status;
+    cin >> name >> status;
+    DBentry* entry = treeDB->find(name);
+    if (entry == nullptr)
+        cout << ERROR_ENTRY_NOT_FOUND << endl;
+    else {
+        entry->setActive(statusToBool(status));
+        cout << SUCCESS << endl;
+    }
+}
+
+bool statusToBool (const string& status) {
+    return status == "active";
 }

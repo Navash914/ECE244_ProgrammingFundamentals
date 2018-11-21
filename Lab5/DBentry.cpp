@@ -1,11 +1,10 @@
-#include <iostream>
-
 //
 // DBentry.cpp
 //
 // Created by Naveed Ashfaq on 2018-11-19.
 //
 
+#include <iostream>
 #include "DBentry.h"
 
 DBentry::DBentry() {
@@ -46,6 +45,7 @@ bool DBentry::getActive() const {
     return active;
 }
 
+// Prints entry in required format
 ostream &operator<<(ostream &out, const DBentry &rhs) {
     string active = rhs.getActive() ? "active" : "inactive";
     out << rhs.getName() << " : "

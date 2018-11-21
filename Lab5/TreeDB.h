@@ -9,11 +9,11 @@ class TreeDB {
 private:
    TreeNode* root;
    int probesCount;
-   // You will need to add additional private functions
+
    // Recursive functions for common functionality
    bool insert_rec(TreeNode* node, DBentry* entry);
    DBentry* find_rec(TreeNode *node, const string &name);
-   TreeNode * find_delete_rec(TreeNode *node, const string &name, TreeNode *&prev);
+   TreeNode* find_delete_rec(TreeNode *node, const string &name, TreeNode*& parent);
    void clear_rec(TreeNode* node);
    int countActive_rec(TreeNode* node) const;
    void printAll_rec(ostream& out, TreeNode* node) const;
