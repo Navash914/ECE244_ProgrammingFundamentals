@@ -1,22 +1,28 @@
 #include <iostream>
+#include <string>
 #include "TreeDB.h"
 #include "DBentry.h"
 
 using namespace std;
 
+bool statusToBool (const string& status) {
+    return status == "active";
+}
+
 int main() {
     TreeDB* treeDB = new TreeDB;
 
     while (!cin.eof()) {
+        cout << "> ";
         string command;
         cin >> command;
 
         if (command == "insert") {
             string name;
             unsigned int ip;
-            bool status;
+            string status;
             cin >> name >> ip >> status;
-            DBentry* entry = new DBentry(name, ip, status);
+            DBentry* entry = new DBentry(name, ip, statusToBool(status));
             bool success = treeDB->insert(entry);
             if (success)
                 cout << "Success" << endl;
@@ -41,7 +47,7 @@ int main() {
             else
                 cout << "Error: entry does not exist" << endl;
         } else if (command == "printall") {
-            cout << treeDB;
+            cout << *treeDB;
         } else if (command == "printprobes") {
             string name;
             cin >> name;
@@ -57,13 +63,13 @@ int main() {
             treeDB->countActive();
         } else if (command == "updatestatus") {
             string name;
-            bool status;
+            string status;
             cin >> name >> status;
             DBentry* entry = treeDB->find(name);
             if (entry == nullptr)
                 cout << "Error: entry does not exist" << endl;
             else {
-                entry->setActive(status);
+                entry->setActive(statusToBool(status));
                 cout << "Success" << endl;
             }
         } else {
