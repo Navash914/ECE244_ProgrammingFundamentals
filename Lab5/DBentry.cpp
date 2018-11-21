@@ -1,4 +1,3 @@
-#include <utility>
 #include <iostream>
 
 //
@@ -16,7 +15,7 @@ DBentry::DBentry() {
 }
 
 DBentry::DBentry(string _name, unsigned int _IPaddress, bool _active) {
-    name = std::move(_name);
+    name = _name;
     IPaddress = _IPaddress;
     active = _active;
 }
@@ -24,7 +23,7 @@ DBentry::DBentry(string _name, unsigned int _IPaddress, bool _active) {
 DBentry::~DBentry() = default;
 
 void DBentry::setName(string _name) {
-    name = std::move(_name);
+    name = _name;
 }
 
 void DBentry::setIPaddress(unsigned int _IPaddress) {

@@ -28,7 +28,47 @@ DBentry *TreeDB::find(string name) {
 }
 
 bool TreeDB::remove(string name) {
-    return false;
+    TreeNode* parent = nullptr;
+    TreeNode* toDelete = find_delete_rec(root, name, parent);
+    if (toDelete == nullptr)
+        return false; // Node does not exist
+    TreeNode *left = toDelete->getLeft(), *right = toDelete->getRight();
+    TreeNode* replaceNode;
+    if (left == nullptr && right == nullptr) {
+        // Node to delete is a leaf
+        replaceNode = nullptr;
+    } else if (left == nullptr || right == nullptr) {
+        // Node to delete has one subtree
+        if (left == nullptr)
+            replaceNode = right;
+        else
+            replaceNode = left;
+    } else {
+        // Node to delete has two subtrees
+        replaceNode = left;
+        if (left->getRight() != nullptr) {
+            TreeNode* it = toDelete;
+            while (replaceNode->getRight() != nullptr) {
+                it = replaceNode;
+                replaceNode = replaceNode->getRight();
+            }
+            it->setRight(replaceNode->getLeft());
+            replaceNode->setLeft(left);
+        }
+        replaceNode->setRight(right);
+    }
+
+    // Check if deleting root
+    if (parent != nullptr) {
+        // Not deleting root
+        if (parent->getLeft() == toDelete)
+            parent->setLeft(replaceNode);
+        else
+            parent->setRight(replaceNode);
+    }
+
+    delete toDelete;
+    return true;
 }
 
 void TreeDB::clear() {
@@ -46,6 +86,7 @@ void TreeDB::countActive() const {
 
 ostream &operator<<(ostream &out, const TreeDB &rhs) { // Is a friend
     rhs.printAll_rec(out, rhs.root);
+    return out;
 }
 
 //
@@ -84,17 +125,16 @@ DBentry* TreeDB::find_rec(TreeNode *node, const string& name) {
         return find_rec(node->getRight(), name);
 }
 
-DBentry* TreeDB::find_rec(TreeNode *node, const string &name, TreeNode *&prev) {
-    probesCount++;
+TreeNode* TreeDB::find_delete_rec(TreeNode *node, const string &name, TreeNode *&prev) {
     if (node == nullptr)
         return nullptr;
     if (node->getEntry()->getName() == name)
-        return node->getEntry();
+        return node;
     prev = node;
     if (name < node->getEntry()->getName())
-        return find_rec(node->getLeft(), name, prev);
+        return find_delete_rec(node->getLeft(), name, prev);
     else
-        return find_rec(node->getRight(), name, prev);
+        return find_delete_rec(node->getRight(), name, prev);
 }
 
 void TreeDB::clear_rec(TreeNode *node) {

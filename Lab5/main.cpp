@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-    TreeDB treeDB;
+    TreeDB* treeDB = new TreeDB;
 
     while (!cin.eof()) {
         string command;
@@ -17,7 +17,7 @@ int main() {
             bool status;
             cin >> name >> ip >> status;
             DBentry* entry = new DBentry(name, ip, status);
-            bool success = treeDB.insert(entry);
+            bool success = treeDB->insert(entry);
             if (success)
                 cout << "Success" << endl;
             else {
@@ -27,7 +27,7 @@ int main() {
         } else if (command == "find") {
             string name;
             cin >> name;
-            DBentry* entry = treeDB.find(name);
+            DBentry* entry = treeDB->find(name);
             if (entry == nullptr)
                 cout << "Error: entry does not exist" << endl;
             else
@@ -35,31 +35,31 @@ int main() {
         } else if (command == "remove") {
             string name;
             cin >> name;
-            bool success = treeDB.remove(name);
+            bool success = treeDB->remove(name);
             if (success)
                 cout << "Success" << endl;
             else
-                cout << "Error: entry already exists" << endl;
+                cout << "Error: entry does not exist" << endl;
         } else if (command == "printall") {
             cout << treeDB;
         } else if (command == "printprobes") {
             string name;
             cin >> name;
-            DBentry* entry = treeDB.find(name);
+            DBentry* entry = treeDB->find(name);
             if (entry == nullptr)
                 cout << "Error: entry does not exist" << endl;
             else
-                treeDB.printProbes();
+                treeDB->printProbes();
         } else if (command == "removeall") {
-            treeDB.clear();
+            treeDB->clear();
             cout << "Success" << endl;
         } else if (command == "countactive") {
-            treeDB.countActive();
+            treeDB->countActive();
         } else if (command == "updatestatus") {
             string name;
             bool status;
             cin >> name >> status;
-            DBentry* entry = treeDB.find(name);
+            DBentry* entry = treeDB->find(name);
             if (entry == nullptr)
                 cout << "Error: entry does not exist" << endl;
             else {
@@ -71,4 +71,8 @@ int main() {
             cout << "Invalid command" << endl;
         }
     }
+
+    delete treeDB;
+
+    return EXIT_SUCCESS;
 }
