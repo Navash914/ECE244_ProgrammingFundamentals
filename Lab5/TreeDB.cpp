@@ -24,6 +24,7 @@ bool TreeDB::insert(DBentry *newEntry) {
 }
 
 DBentry *TreeDB::find(string name) {
+    probesCount = 0;
     return find_rec(root, name);
 }
 
