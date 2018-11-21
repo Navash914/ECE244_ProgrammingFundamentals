@@ -13,7 +13,7 @@ private:
    // Recursive functions for common functionality
    bool insert_rec(TreeNode* node, DBentry* entry);
    DBentry* find_rec(TreeNode *node, const string &name);
-   DBentry* find_rec(TreeNode *node, const string &name, TreeNode *&prev);
+   TreeNode * find_delete_rec(TreeNode *node, const string &name, TreeNode *&prev);
    void clear_rec(TreeNode* node);
    int countActive_rec(TreeNode* node) const;
    void printAll_rec(ostream& out, TreeNode* node) const;
