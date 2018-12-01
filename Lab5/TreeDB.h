@@ -11,12 +11,14 @@ private:
    int probesCount;
 
    // Recursive functions for common functionality
-   bool insert_rec(TreeNode* node, DBentry* entry);
-   DBentry* find_rec(TreeNode *node, const string &name);
+   bool insert_rec(TreeNode* node, DBentry* entry);             // Recursive Insert
+   DBentry* find_rec(TreeNode *node, const string &name);       // Recursive Find
+   void clear_rec(TreeNode* node);                              // Recursive Clear
+   int countActive_rec(TreeNode* node) const;                   // Recursive Count Active Nodes
+   void printAll_rec(ostream& out, TreeNode* node) const;       // Recursively Print All Nodes In Order
+
+   // Recursive find. Also assigns the parent of the node to pointer passed by reference:
    TreeNode* find_delete_rec(TreeNode *node, const string &name, TreeNode*& parent);
-   void clear_rec(TreeNode* node);
-   int countActive_rec(TreeNode* node) const;
-   void printAll_rec(ostream& out, TreeNode* node) const;
 
 public:
    // the default constructor, creates an empty database.

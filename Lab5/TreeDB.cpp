@@ -33,6 +33,8 @@ bool TreeDB::remove(string name) {
     TreeNode* toDelete = find_delete_rec(root, name, parent); // Node to delete
     if (toDelete == nullptr)
         return false; // Node does not exist
+
+    // Node exists at this point.
     TreeNode* left = toDelete->getLeft(); // Left subtree of node to delete
     TreeNode* right = toDelete->getRight(); // Right subtree of node to delete
     TreeNode* replaceNode; // Node to replace the deleted node
@@ -59,7 +61,7 @@ bool TreeDB::remove(string name) {
             replaceParent->setRight(replaceNode->getLeft());
             replaceNode->setLeft(left);
         }
-        replaceNode->setRight(right);
+        replaceNode->setRight(right); // Assign right subtree of toDelete node as right subtree of replaceNode
     }
 
     // Check if deleting root
@@ -74,6 +76,7 @@ bool TreeDB::remove(string name) {
             parent->setRight(replaceNode);
     }
 
+    // Delete the node
     delete toDelete;
     return true;
 }
@@ -137,7 +140,7 @@ DBentry* TreeDB::find_rec(TreeNode *node, const string& name) {
         return find_rec(node->getRight(), name);
 }
 
-// Returns node to delete. Also sets pointer passed by ref to parent of node to delete.
+// Returns node to delete. Also sets pointer (passed by ref) to parent of node to delete.
 TreeNode* TreeDB::find_delete_rec(TreeNode *node, const string &name, TreeNode *&parent) {
     if (node == nullptr)
         return nullptr;
